@@ -7,7 +7,7 @@
     <title>Edit Penjualan</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body style="background: rgb(202, 129, 129)">
+<body style="background: rgb(215, 211, 211)">
 
     <div class="container mt-5 mb-5">
         <div class="row">

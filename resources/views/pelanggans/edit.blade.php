@@ -7,7 +7,7 @@
     <title>Edit Pelanggan</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body style="background: rgb(138, 48, 48)">
+<body style="background: rgb(213, 210, 210)">
 
     <div class="container mt-5 mb-5">
         <div class="row">
