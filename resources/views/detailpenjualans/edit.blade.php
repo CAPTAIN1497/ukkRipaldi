@@ -33,8 +33,8 @@
                             <label class="form-label">ID Produk</label>
                             <select name="idproduk" class="form-select" id="idproduk" required>
                                 @foreach($produks as $produk)
-                                    <option value="{{ $produk->idproduk }}" data-harga="{{ $produk->harga }}" {{ $detailPenjualan->idproduk == $produk->idproduk ? 'selected' : '' }}>
-                                        {{ $produk->idproduk }} - {{ $produk->nama_produk }} (Rp {{ number_format($produk->harga, 0, ',', '.') }})
+                                    <option value="{{ $produk->idproduk }}" data-harga="{{ $produk->harga }}" data-stok="{{ $produk->stok }}" {{ $detailPenjualan->idproduk == $produk->idproduk ? 'selected' : '' }}>
+                                        {{ $produk->idproduk }} - {{ $produk->nama_produk }} (Rp {{ number_format($produk->harga, 0, ',', '.') }}) - Stok: {{ $produk->stok }}
                                     </option>
                                 @endforeach
                             </select>
@@ -49,6 +49,7 @@
                         <div class="mb-3">
                             <label class="form-label">Jumlah Produk</label>
                             <input type="number" name="jumlahproduk" id="jumlahproduk" class="form-control" value="{{ $detailPenjualan->jumlahproduk }}" required min="1">
+                            <small id="stok-warning" class="text-danger" style="display: none;">Stok tidak mencukupi!</small>
                         </div>
 
                         <div class="mb-3">
@@ -58,7 +59,7 @@
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                            <button type="submit" id="btn-submit" class="btn btn-success">Simpan Perubahan</button>
                             <a href="{{ route('detailpenjualans.index') }}" class="btn btn-secondary">Batal</a>
                         </div>
                     </form>
@@ -76,16 +77,27 @@ document.addEventListener("DOMContentLoaded", function() {
     const subtotalHidden = document.getElementById("subtotal_hidden");
     const hargaProduk = document.getElementById("hargaproduk");
     const hargaHidden = document.getElementById("harga_hidden");
+    const stokWarning = document.getElementById("stok-warning");
+    const btnSubmit = document.getElementById("btn-submit");
 
     function hitungSubtotal() {
         const selectedOption = idProduk.options[idProduk.selectedIndex];
-        const harga = selectedOption.getAttribute("data-harga") || 0;
-        const jumlah = jumlahProduk.value;
+        const harga = parseInt(selectedOption.getAttribute("data-harga")) || 0;
+        const stok = parseInt(selectedOption.getAttribute("data-stok")) || 0;
+        const jumlah = parseInt(jumlahProduk.value) || 0;
 
         hargaProduk.value = harga ? "Rp " + new Intl.NumberFormat('id-ID').format(harga) : "";
         hargaHidden.value = harga;
         subtotal.value = harga && jumlah ? "Rp " + new Intl.NumberFormat('id-ID').format(harga * jumlah) : "Rp 0";
         subtotalHidden.value = harga * jumlah;
+
+        if (jumlah > stok) {
+            stokWarning.style.display = "block";
+            btnSubmit.disabled = true;
+        } else {
+            stokWarning.style.display = "none";
+            btnSubmit.disabled = false;
+        }
     }
 
     idProduk.addEventListener("change", hitungSubtotal);
